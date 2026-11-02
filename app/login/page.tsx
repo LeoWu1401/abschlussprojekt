@@ -1,4 +1,4 @@
-export default function AnmeldenPage() {
+export default function LoginPage() {
   return (
     <div>
       <h1>Anmelden</h1>

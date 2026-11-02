@@ -1,4 +1,4 @@
-export default function Startseite() {
+export default function HomePage() {
   return (
     <div>
       <h1>Ink-Board</h1>
