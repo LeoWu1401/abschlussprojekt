@@ -2,6 +2,7 @@ import Link from "next/link";
 
 type PostCardProps = {
   post: {
+    id: number;
     title: string;
     type: string;
     city: string;
