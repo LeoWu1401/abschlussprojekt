@@ -1,21 +1,24 @@
 import Link from "next/link";
 import PostCard from "../components/PostCard";
+import posts from "../data/posts";
 
 export default function BoardPage() {
-  const post = {
-    id: 1,
-    title: "Flash Day in Köln",
-    type: "Flash Day",
-    city: "Köln",
-    date: "12.12.2026",
-    user: {name: "Mira"},
-  };
+  
 
   return (
     <div>
       <h1>Pinnwand</h1>
-      <PostCard post={post} />
-      <Link href="/posts/1">Beispiel-Aktion ansehen</Link>
+      <p className="mb-8 opacity-70">
+        Hier stehen die Aktionen der Artists. Noch sind es Beispiel-Daten.
+      </p>
+      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {posts.map((post) => (
+          <PostCard key={post.id} post={post} />
+        ))}
+      </div>
+      <Link href="/posts/1" className="mt-8 block">
+      Beispiel-Aktion ansehen
+      </Link>
     </div>
   );
 }
