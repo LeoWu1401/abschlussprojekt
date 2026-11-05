@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type PostCardProps = {
   post: {
     title: string;
@@ -6,22 +8,19 @@ type PostCardProps = {
     date: string;
     user: {
       name: string;
-    }
-  }
-}
-
+    };
+  };
+};
 
 export default function PostCard({ post }: PostCardProps) {
   return (
-    <div className="border p-4">
-      <h2>{post.title}</h2>
-      <p>{post.type}</p>
-      <p>
-        {post.city}, {post.date}
+    <Link href={`/posts/${post.id}`} className="card">
+      <span className="badge">{post.type}</span>
+      <h2 className="mt-3">{post.title}</h2>
+      <p className="mt-2">
+        {post.city} · {post.date}
       </p>
-      <p>von {post.user.name}</p>
-
-
-    </div>
-  )
+      <p className="mt-1 text-sm opacity-70">von {post.user.name}</p>
+    </Link>
+  );
 }

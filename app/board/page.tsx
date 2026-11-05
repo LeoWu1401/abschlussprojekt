@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import PostCard from "../components/PostCard";
 import posts from "../data/posts";
 
@@ -16,9 +16,7 @@ export default function BoardPage() {
           <PostCard key={post.id} post={post} />
         ))}
       </div>
-      <Link href="/posts/1" className="mt-8 block">
-      Beispiel-Aktion ansehen
-      </Link>
+      
     </div>
   );
 }
