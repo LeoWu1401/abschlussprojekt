@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import posts from "../../data/posts";
+import { prisma } from "@/lib/prisma";
+import { federalStates, postTypes } from "@/lib/labels";
+import { formatDate } from "@/lib/format";
 
 export default async function PostPage({
   params,
@@ -8,7 +10,16 @@ export default async function PostPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const post = posts.find((post) => post.id === Number(id));
+  const postId = Number(id);
+
+  if (!Number.isInteger(postId)) {
+    notFound();
+  }
+
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+    include: { user: { select: { name: true } } },
+  });
 
   if (!post) {
     notFound();
@@ -21,21 +32,32 @@ export default async function PostPage({
       </Link>
       <h1 className="mt-4">{post.title}</h1>
       <p>
-        <strong>Art:</strong> {post.type}
+        <strong>Art:</strong> {postTypes[post.type]}
       </p>
       <p>
-        <strong>Datum:</strong> {post.date}
+        <strong>Datum:</strong> {formatDate(post.date)}
       </p>
       <p>
-        <strong>Bundesland:</strong> {post.federalState}
+        <strong>Bundesland:</strong> {federalStates[post.federalState]}
       </p>
       <p>
         <strong>Stadt:</strong> {post.city}
       </p>
+      {post.address && (
+        <p>
+          <strong>Adresse:</strong> {post.address}
+        </p>
+      )}
       <p className="mt-4 max-w-xl">{post.description}</p>
       <p className="mt-4">
+        <strong>Kontakt:</strong> {post.contact}
+      </p>
+      <p className="mt-4">
         von{" "}
-        <Link href="/profile/1" className="font-semibold underline">
+        <Link
+          href={`/profile/${post.userId}`}
+          className="font-semibold underline"
+        >
           {post.user.name}
         </Link>
       </p>
