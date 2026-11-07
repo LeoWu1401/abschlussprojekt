@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  password  String
+  createdAT DateTime  @default(now())
+  posts     Post[]
+  sessions  Session[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+}
+
+model Post {
+  id           Int          @id @default(autoincrement())
+  title        String
+  type         PostType
+  federalState FederalState
+  city         String
+  address      String?
+  date         DateTime     @db.Date
+  description  String
+  contact      String
+  createdAt    DateTime     @default(now())
+  userId       Int
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum PostType {
+  FLASH_DAY
+  GUEST_SPOT
+  CONVENTION
+  PROJECT
+  OTHER
+}
+
+enum FederalState {
+  BW
+  BY
+  BE
+  BB
+  HB
+  HH
+  HE
+  MV
+  NI
+  NW
+  RP
+  SL
+  SN
+  ST
+  SH
+  TH
+}
