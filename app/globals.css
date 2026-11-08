@@ -51,4 +51,8 @@ body {
   .input {
     @apply w-full rounded-lg border-2 border-foreground bg-white px-3 py-2;
   }
+
+  .error {
+    @apply rounded-lg border-2 border-stamp bg-white px-3 py-2 font-semibold text-stamp;
+  }
 }

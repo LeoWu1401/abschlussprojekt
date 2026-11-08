@@ -1,15 +1,38 @@
 import Link from "next/link";
 import Field from "../components/Field";
+import { register } from "../actions/auth";
+import { SearchParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 
-export default function RegisterPage() {
+
+export default async function RegisterPage({
+  searchParams,
+}: {
+  searchParams: Promise<{error?: string }>;
+}) {
+  const { error } = await searchParams;
+
   return (
     <div className="mx-auto max-w-md">
       <h1>Registrieren</h1>
-      <form className="mt-6 flex flex-col gap-4">
-        <Field label="Name" name="name" />
-        <Field label="E-Mail" name="email" type="email" />
-        <Field label="Passwort" name="password" type="password" />
-        <button type="button" className="btn-primary self-start">
+      {error === "invalid" && (
+        <p className="error mt-4">
+          Bitte alle Felder ausfüllen. Das Passwort braucht mindestens 8
+          Zeichen.
+        </p>
+      )}
+      {error === "taken" && (
+        <p className="error mt-4">Diese E-Mail ist schon registriert.</p>
+      )}
+      <form action={register} className="mt-6 flex flex-col gap-4">
+        <Field label="Name" name="name" required />
+        <Field label="E-Mail" name="email" type="email" required />
+        <Field
+          label="Passwort (mindestens 8 Zeichen)"
+          name="password"
+          type="password"
+          required
+        />
+        <button type="submit" className="btn-primary self-start">
           Registrieren
         </button>
       </form>
