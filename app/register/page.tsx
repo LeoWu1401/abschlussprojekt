@@ -1,13 +1,11 @@
 import Link from "next/link";
 import Field from "../components/Field";
 import { register } from "../actions/auth";
-import { SearchParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
-
 
 export default async function RegisterPage({
   searchParams,
 }: {
-  searchParams: Promise<{error?: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
   const { error } = await searchParams;
 

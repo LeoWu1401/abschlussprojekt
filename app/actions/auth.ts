@@ -3,7 +3,7 @@
 import argon2 from "argon2";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { createSession } from "@/lib/session";
+import { createSession, deleteSession } from "@/lib/session";
 
 export async function register(formData: FormData) {
   const name = String(formData.get("name") || "" ).trim();
@@ -13,7 +13,7 @@ export async function register(formData: FormData) {
   const password = String(formData.get("password") || "");
 
   if (!name || !email || password.length < 8) {
-    redirect("register?error=invalid");
+    redirect("/register?error=invalid");
   }
   
   const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -35,3 +35,8 @@ export async function register(formData: FormData) {
   await createSession(user.id);
   redirect("/board");
 }
+
+export async function logout() {
+  await deleteSession();
+  redirect("/");
+  }
