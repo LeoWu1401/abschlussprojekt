@@ -40,3 +40,23 @@ export async function logout() {
   await deleteSession();
   redirect("/");
   }
+
+export async function login(formData: FormData) {
+  const email = String(formData.get("email") || "")
+  .trim()
+  .toLowerCase();
+  const password = String(formData.get("password") || "");
+
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
+    redirect("/login?error=invalid");
+  }
+  
+  const passwordIsCorrect = await argon2.verify(user.password, password);
+  if (!passwordIsCorrect) {
+    redirect("/login?error=invalid");
+  }
+
+  await createSession(user.id);
+  redirect("/board");
+}

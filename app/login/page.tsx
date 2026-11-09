@@ -1,14 +1,25 @@
 import Link from "next/link";
 import Field from "../components/Field";
+import { login } from "../actions/auth";
 
-export default function LoginPage() {
+
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
+
   return (
     <div className="mx-auto max-w-md">
       <h1>Anmelden</h1>
-      <form className="mt-6 flex flex-col gap-4">
-        <Field label="E-Mail" name="email" type="email" />
-        <Field label="Passwort" name="password" type="password" />
-        <button type="button" className="btn-primary self-start">
+      {error && (
+        <p className="error mt-4">E-Mail oder Passwort stimmt nicht.</p>
+      )}
+      <form action={login} className="mt-6 flex flex-col gap-4">
+        <Field label="E-Mail" name="email" type="email" required />
+        <Field label="Passwort" name="password" type="password" required />
+        <button type="submit" className="btn-primary self-start">
           Anmelden
         </button>
       </form>
@@ -21,3 +32,4 @@ export default function LoginPage() {
     </div>
   );
 }
+  
