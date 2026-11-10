@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 
 const SESSION_DAYS = 14;
@@ -30,5 +31,36 @@ export async function deleteSession() {
   }
 
   cookieStore.delete("session")
+  
+}
+
+export async function getCurrentUser() {
+  const cookieStore = await cookies();
+  const sessionId = cookieStore.get("session")?.value;
+
+  if (!sessionId) {
+    return null;
+  }
+
+  const session = await prisma.session.findUnique({
+    where: { id: sessionId },
+    include: { user: { select: { id: true, name: true } } },
+  });
+
+  if (!session || session.expiresAt < new Date()) {
+    return null;
+  }
+
+  return session.user;
+}
+
+export async function requireUser() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  return user;
   
 }
