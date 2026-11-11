@@ -10,8 +10,8 @@ export default async function PostPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireUser()
-  
+  const user = await requireUser();
+
   const { id } = await params;
   const postId = Number(id);
 
@@ -64,11 +64,13 @@ export default async function PostPage({
           {post.user.name}
         </Link>
       </p>
-      <div className="mt-6">
-        <Link href={`/posts/${post.id}/edit`} className="btn-secondary">
-          Bearbeiten
-        </Link>
-      </div>
+      {post.userId === user.id && (
+        <div className="mt-6">
+          <Link href={`/posts/${post.id}/edit`} className="btn-secondary">
+            Bearbeiten
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
