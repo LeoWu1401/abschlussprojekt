@@ -1,4 +1,8 @@
-export default function EditProfilePage() {
+import { requireUser } from "@/lib/session"
+
+export default async function EditProfilePage() {
+  await requireUser();
+  
   return (
     <div>
       <h1>Profil bearbeiten</h1>

@@ -1,13 +1,19 @@
 import Link from "next/link";
 import Field from "../components/Field";
 import { login } from "../actions/auth";
-
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/session";
 
 export default async function LoginPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string }>;
 }) {
+  
+  const user = await getCurrentUser();
+  if (user) {
+    redirect("/board");
+  }
   const { error } = await searchParams;
 
   return (

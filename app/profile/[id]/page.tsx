@@ -1,6 +1,10 @@
 import Link from "next/link";
+import { requireUser } from "@/lib/session";
 
-export default function ProfilePage() {
+
+export default async function ProfilePage() {
+  await requireUser()
+  
   return (
     <div>
       <h1>Profil</h1>

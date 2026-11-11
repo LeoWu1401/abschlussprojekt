@@ -1,4 +1,8 @@
-export default function EditPostPage() {
+import { requireUser } from "@/lib/session"
+
+export default async function EditPostPage() {
+  await requireUser()
+  
   return (
     <div>
       <h1>Aktion bearbeiten</h1>

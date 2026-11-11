@@ -3,12 +3,15 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { federalStates, postTypes } from "@/lib/labels";
 import { formatDate } from "@/lib/format";
+import { requireUser } from "@/lib/session";
 
 export default async function PostPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireUser()
+  
   const { id } = await params;
   const postId = Number(id);
 

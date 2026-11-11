@@ -1,9 +1,12 @@
 import PostCard from "../components/PostCard";
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 export default async function BoardPage() {
+  await requireUser();
+  
   const posts = await prisma.post.findMany({
     orderBy: { date: "asc" },
     include: { user: { select: { name: true } } },
