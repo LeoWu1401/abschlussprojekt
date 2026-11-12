@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { federalStates, postTypes } from "@/lib/labels";
 import { formatDate } from "@/lib/format";
 import { requireUser } from "@/lib/session";
+import DeleteButton from "@/app/components/DeleteButton";
+
 
 export default async function PostPage({
   params,
@@ -65,10 +67,11 @@ export default async function PostPage({
         </Link>
       </p>
       {post.userId === user.id && (
-        <div className="mt-6">
+        <div className="mt-6 flex gap-3">
           <Link href={`/posts/${post.id}/edit`} className="btn-secondary">
             Bearbeiten
           </Link>
+          <DeleteButton postId={post.id} />
         </div>
       )}
     </div>

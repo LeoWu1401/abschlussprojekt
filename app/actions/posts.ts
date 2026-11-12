@@ -74,3 +74,11 @@ export async function updatePost(formData: FormData) {
   revalidatePath(`/posts/${id}`);
   redirect(`/posts/${id}`);
 }
+export async function deletePost(id: number) {
+  await requireOwnPost(id);
+  await prisma.post.delete({ where: { id } });
+
+  revalidatePath("/board");
+  redirect("/board");
+  
+}
