@@ -7,9 +7,9 @@ export default async function HomePage() {
   if (user) {
     redirect("/board");
   }
-  
+
   return (
-    <div className="py-12 text-center">
+    <div className="flex min-h-[70vh] flex-col items-center justify-center text-center">
       <h1 className="text-6xl">Ink-Board</h1>
       <p className="mt-6 text-xl">
         Die Pinnwand für gemeinsame Aktionen von Tattoo-Artists.
