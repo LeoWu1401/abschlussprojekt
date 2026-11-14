@@ -7,7 +7,14 @@ async function main() {
   const userCount = await prisma.user.count();
 
   if (userCount > 0) {
-    console.log("Es gibt schon User. Der seed macht nichts.");
+    for (const user of users) {
+      await prisma.user.updateMany({
+        where: { email: user.email },
+        data: user.profile,
+      });
+    }
+
+    console.log("Es gibt schon User. Profile der Beispiel-User aktualisiert.");
     return;
   }
 
@@ -19,7 +26,8 @@ async function main() {
         name: user.name,
         email: user.email,
         password,
-        posts: {create: user.posts },
+        ...user.profile,
+        posts: { create: user.posts },
       },
     });
   }

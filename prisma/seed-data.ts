@@ -4,6 +4,11 @@ export const users = [
   {
     name: "Mira Black",
     email: "mira@example.com",
+    profile: {
+      city: "Köln",
+      studio: "Studio Schwarzlicht",
+      tattooStyle: "Blackwork",
+    },
     posts: [
       {
         title: "Flash Day für den guten Zweck",
@@ -21,6 +26,11 @@ export const users = [
   {
     name: "Jonas Weber",
     email: "jonas@example.com",
+    profile: {
+      city: "Frankfurt",
+      studio: "Nadelwerk",
+      tattooStyle: "Neo Traditional",
+    },
     posts: [
       {
         title: "Fahrgemeinschaft zur Convention",
@@ -38,6 +48,11 @@ export const users = [
   {
     name: "Tom Richter",
     email: "tom@example.com",
+    profile: {
+      city: "Leipzig",
+      studio: "Kollektiv Ost",
+      tattooStyle: "Illustrativ",
+    },
     posts: [
       {
         title: "Gemeinsames Flash-Heft",
@@ -54,6 +69,11 @@ export const users = [
   {
     name: "Lea Brandt",
     email: "lea@example.com",
+    profile: {
+      city: "Hamburg",
+      studio: "Hafenstich",
+      tattooStyle: "Traditional",
+    },
     posts: [
       {
         title: "Suche Guest Spot im März",
@@ -70,6 +90,11 @@ export const users = [
   {
     name: "Ali Demir",
     email: "ali@example.com",
+    profile: {
+      city: "München",
+      studio: "Studio Nadelöhr",
+      tattooStyle: "Fineline",
+    },
     posts: [
       {
         title: "Workshop Linework",
@@ -87,6 +112,11 @@ export const users = [
   {
     name: "Sara König",
     email: "sara@example.com",
+    profile: {
+      city: "München",
+      studio: "Studio Nadelöhr",
+      tattooStyle: "Fineline",
+    },
     posts: [
       {
         title: "Freitag der 13. Flash Day",

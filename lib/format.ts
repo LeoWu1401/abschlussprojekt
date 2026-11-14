@@ -5,3 +5,7 @@ export function formatDate(date: Date) {
     year: "numeric",
   });
 }
+
+export function startOfToday() {
+  return new Date(new Date().toISOString().slice(0, 10));
+}
