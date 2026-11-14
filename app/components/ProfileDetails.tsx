@@ -1,3 +1,10 @@
+"use client"
+
+import { useState } from "react";
+import { updateProfile } from "@/app/actions/profile";
+import Field from "@/app/components/Field";
+
+
 type ProfileDetailsProps = {
   profile: {
     name: string;
@@ -13,6 +20,57 @@ export default function ProfileDetails({
   profile,
   isOwner,
 }: ProfileDetailsProps) {
+  const [editing, setEditing] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSave(formData: FormData) {
+    const result = await updateProfile(formData);
+    setError(result.error);
+
+    if (!result.error) {
+      setEditing(false);
+    }
+  }
+
+  if (editing) {
+    return (
+      <form action={handleSave} className="flex max-w-xl flex-col gap-4">
+        <h1>Profil bearbeiten</h1>
+        {error && <p className="error">{error}</p>}
+        <Field label="Name" name="name" required defaultValue={profile.name} />
+        <Field label="Stadt" name="city" defaultValue={profile.city || ""} />
+        <Field
+          label="Studio"
+          name="studio"
+          defaultValue={profile.studio || ""}
+        />
+        <Field
+          label="Stil"
+          name="tattooStyle"
+          defaultValue={profile.tattooStyle || ""}
+        />
+        <Field
+          label="Instagram-Link"
+          name="instagramUrl"
+          type="url"
+          defaultValue={profile.instagramUrl || ""}
+        />
+        <div className="flex gap-3">
+          <button type="submit" className="btn-primary">
+            Speichern
+          </button>
+          <button
+            type="button"
+            onClick={() => setEditing(false)}
+            className="btn-secondary"
+          >
+            Abbrechen
+          </button>
+        </div>
+      </form>
+    );
+  }
+
   return (
     <div>
       <h1>{profile.name}</h1>
@@ -43,7 +101,15 @@ export default function ProfileDetails({
           </a>
         </p>
       )}
-      {isOwner && <p className="mt-4 text-sm opacity-70">Das ist dein Profil.</p>}
+      {isOwner && (
+        <button
+          type="button"
+          onClick={() => setEditing(true)}
+          className="btn-secondary mt-4"
+        >
+          Profil bearbeiten
+        </button>
+      )}
     </div>
   );
 }
