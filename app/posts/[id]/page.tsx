@@ -5,6 +5,7 @@ import { federalStates, postTypes } from "@/lib/labels";
 import { formatDate } from "@/lib/format";
 import { requireUser } from "@/lib/session";
 import DeleteButton from "@/app/components/DeleteButton";
+import { getContactHref } from "@/lib/contact";
 
 
 export default async function PostPage({
@@ -29,6 +30,9 @@ export default async function PostPage({
   if (!post) {
     notFound();
   }
+  
+  const contactHref = getContactHref(post.contact, post.title);
+;
 
   return (
     <div>
@@ -55,7 +59,14 @@ export default async function PostPage({
       )}
       <p className="mt-4 max-w-xl">{post.description}</p>
       <p className="mt-4">
-        <strong>Kontakt:</strong> {post.contact}
+        <strong>Kontakt:</strong>{" "}
+        {contactHref ? (
+          <a href={contactHref} className="font-semibold underline">
+            {post.contact}
+          </a>
+        ) : (
+          post.contact
+        )}
       </p>
       <p className="mt-4">
         von{" "}
