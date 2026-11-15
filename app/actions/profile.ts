@@ -13,9 +13,13 @@ export async function updateProfile(formData: FormData) {
   const tattooStyle = String(formData.get("tattooStyle") || "").trim();
   const instagramUrl = String(formData.get("instagramUrl") || "").trim();
   
-  if (!name) {
-    return { error: "Der Instagram-Link muss mit https:// beginnen."};
-  }
+    if (!name) {
+      return { error: "Bitte gib einen Namen ein." };
+    }
+
+    if (instagramUrl && !instagramUrl.startsWith("https://")) {
+      return { error: "Der Instagram-Link muss mit https:// beginnen." };
+    }
 
   await prisma.user.update({
     where: { id: user.id },
