@@ -24,11 +24,11 @@ export default function Nav({ user }: NavProps) {
 
   return (
     <nav className="flex flex-wrap items-center justify-between gap-x-8 gap-y-2 border-b-2 px-6 py-4">
-      <Link href="/" className="logo">
+      <Link href="/" className="logo text-3xl">
         <span className="icon icon-machine" aria-hidden="true" />
         Ink-Board
       </Link>
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-1 font-medium">
         {links.map((link) => (
           <Link
             key={link.href}
