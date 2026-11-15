@@ -74,42 +74,62 @@ export default function ProfileDetails({
   return (
     <div>
       <h1>{profile.name}</h1>
-      {profile.city && (
-        <p>
-          <strong>Stadt:</strong> {profile.city}
-        </p>
-      )}
-      {profile.studio && (
-        <p>
-          <strong>Studio:</strong> {profile.studio}
-        </p>
-      )}
-      {profile.tattooStyle && (
-        <p>
-          <strong>Stil:</strong> {profile.tattooStyle}
-        </p>
-      )}
-      {profile.instagramUrl && (
-        <p className="mt-2">
-          <a
-            href={profile.instagramUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="font-semibold underline"
-          >
-            Instagram
-          </a>
-        </p>
-      )}
+      <div className="facts mt-6 max-w-md">
+        {profile.city && (
+          <p className="fact">
+            <span className="icon icon-pin" aria-hidden="true" />
+            <span>
+              <small>Stadt</small>
+              {profile.city}
+            </span>
+          </p>
+        )}
+        {profile.studio && (
+          <p className="fact">
+            <span className="icon icon-machine" aria-hidden="true" />
+            <span>
+              <small>Studio</small>
+              {profile.studio}
+            </span>
+          </p>
+        )}
+        {profile.tattooStyle && (
+          <p className="fact">
+            <span className="icon icon-bottle" aria-hidden="true" />
+            <span>
+              <small>Stil</small>
+              {profile.tattooStyle}
+            </span>
+          </p>
+        )}
+        {profile.instagramUrl && (
+          <p className="fact">
+            <span className="icon icon-instagram" aria-hidden="true" />
+            <a
+              href={profile.instagramUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold underline"
+            >
+              Instagram
+            </a>
+          </p>
+        )}
+        {!profile.city &&
+          !profile.studio &&
+          !profile.tattooStyle &&
+          !profile.instagramUrl && <p>Noch keine Angaben.</p>}
+      </div>
       {isOwner && (
         <button
           type="button"
           onClick={() => setEditing(true)}
-          className="btn-secondary mt-4"
+          className="btn-secondary mt-6"
         >
           Profil bearbeiten
         </button>
       )}
     </div>
   );
+      
 }
