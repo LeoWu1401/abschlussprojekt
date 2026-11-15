@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="220" viewBox="0 0 300 220">
+<defs><filter id="s" x="-30%" y="-30%" width="160%" height="160%">
+<feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="3" seed="7" result="n"/>
+<feDisplacementMap in="SourceGraphic" in2="n" scale="34" xChannelSelector="R" yChannelSelector="G" result="d"/>
+<feTurbulence type="fractalNoise" baseFrequency=".07" numOctaves="2" seed="12" result="n2"/>
+<feColorMatrix in="n2" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 -1.05" result="m"/>
+<feComposite in="d" in2="m" operator="in" result="c"/>
+<feGaussianBlur in="c" stdDeviation=".8"/>
+</filter></defs>
+<g filter="url(#s)" fill="#3f3aa6" opacity=".2">
+<ellipse cx="150.0" cy="110.0" rx="112" ry="40" transform="rotate(-16 150.0 110.0)"/>
+</g></svg>

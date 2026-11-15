@@ -1,29 +1,96 @@
 @import "tailwindcss";
 
+/* Ink-Board · Tattoo-Look
+   Tinte als Grundfarbe, Stencil-Violett als Akzent, eine Farbe pro Art. */
+
 :root {
   color-scheme: light;
-  --background: #f6f1e7;
-  --foreground: #1c1917;
+  --background: #f1e6d6; /* Papier und Haut */
+  --foreground: #16131a; /* Tinte */
+  --stencil: #3f3aa6; /* Thermo-Stencil */
+  --stencil-shadow: rgb(63 58 166 / 0.5);
+  --muted: #5f564c;
+  --paper-card: rgb(250 245 236 / 0.74);
+  --tape: rgb(252 249 240 / 0.66);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-stamp: #b3261e;
+  --color-stencil: var(--stencil);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-slab);
+  --font-display: var(--font-rye);
+}
+
+html {
+  background: var(--background);
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  background-color: var(--background);
+  /* Ebenen von vorne nach hinten: Korn, Tintenspritzer, Fingerabdruck,
+     Stencil-Wischer, Papierflecken, dunkler Rand */
+  background-image:
+    url("/textures/grain.svg"),
+    url("/textures/splatter-a.svg"),
+    url("/textures/splatter-b.svg"),
+    url("/textures/fingerprint.svg"),
+    url("/textures/smudge-a.svg"),
+    url("/textures/smudge-b.svg"),
+    url("/textures/mottle.svg"),
+    radial-gradient(
+      ellipse 90% 80% at 50% 30%,
+      transparent 55%,
+      rgb(120 84 44 / 0.22) 100%
+    );
+  background-repeat:
+    repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat,
+    no-repeat;
+  background-size: 240px, 260px, 180px, 150px, 360px, 240px, 900px, 100% 100%;
+  background-position:
+    0 0,
+    right -110px top 300px,
+    left -50px top 70%,
+    right 16% top 96px,
+    left -40px top 10px,
+    right 6% bottom 8%,
+    0 0,
+    0 0;
+}
+
+/* Auf dem Handy: keine Spritzer hinter dem Text, nur ein kleiner ganz unten */
+@media (max-width: 767px) {
+  body {
+    background-image:
+      url("/textures/grain.svg"),
+      url("/textures/splatter-b.svg"),
+      url("/textures/smudge-a.svg"),
+      url("/textures/mottle.svg"),
+      radial-gradient(
+        ellipse 90% 80% at 50% 30%,
+        transparent 55%,
+        rgb(120 84 44 / 0.22) 100%
+      );
+    background-repeat: repeat, no-repeat, no-repeat, repeat, no-repeat;
+    background-size: 240px, 140px, 280px, 900px, 100% 100%;
+    background-position:
+      0 0,
+      right -50px bottom 20px,
+      left -60px top 0,
+      0 0,
+      0 0;
+  }
 }
 
 @layer base {
   h1 {
     @apply mb-2 font-display text-4xl;
+    /* Die Stencil-Linie schimmert leicht versetzt unter der Tinte durch */
+    text-shadow: 2px 2px 0 var(--stencil-shadow);
   }
 
   h2 {
@@ -32,27 +99,225 @@ body {
 }
 
 @layer components {
+  /* Blasse Stellen, wo die Stencil nicht ganz durchgedrückt hat */
+  h1,
+  .logo,
+  .worn {
+    -webkit-mask-image: url("/textures/worn.svg");
+    mask-image: url("/textures/worn.svg");
+    -webkit-mask-size: 320px;
+    mask-size: 320px;
+  }
+
+  .logo {
+    @apply inline-flex items-center gap-2 font-display text-2xl;
+    text-shadow: 2px 2px 0 var(--stencil-shadow);
+  }
+
+  .logo .icon {
+    color: var(--stencil);
+  }
+
+  .nav-active {
+    @apply font-bold underline decoration-stencil decoration-2 underline-offset-[6px];
+  }
+
   .btn-primary {
-    @apply inline-block rounded-lg border-2 border-foreground bg-foreground px-5 py-3 font-semibold text-background transition hover:border-stamp hover:bg-stamp;
+    @apply inline-block rounded-md border-2 border-foreground bg-foreground px-5 py-3 font-semibold text-background transition hover:border-stencil hover:bg-stencil;
   }
 
   .btn-secondary {
-    @apply inline-block rounded-lg border-2 border-foreground px-5 py-3 font-semibold transition hover:bg-foreground hover:text-background;
+    @apply inline-block rounded-md border-2 border-foreground px-5 py-3 font-semibold transition hover:bg-foreground hover:text-background;
   }
 
+  /* Karten hängen wie Stencils an der Flash-Wand */
   .card {
-    @apply block rounded-xl border-2 border-foreground bg-white p-5 transition hover:-translate-y-1 hover:shadow-[4px_4px_0_0_var(--foreground)];
+    @apply relative flex flex-col rounded-sm border-2 border-foreground p-5 pt-6 transition;
+    background:
+      linear-gradient(var(--tint, transparent), var(--tint, transparent)),
+      var(--paper-card);
+    box-shadow: 5px 5px 0 var(--foreground);
+  }
+
+  .card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 var(--foreground);
+  }
+
+  .card h2 {
+    @apply text-xl leading-tight;
+  }
+
+  /* Klebestreifen */
+  .card::before,
+  .facts::before {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    width: 78px;
+    height: 22px;
+    background: var(--tape);
+    box-shadow: 0 1px 2px rgb(22 19 26 / 0.14);
+    transform: translateX(-50%) rotate(-3deg);
+    clip-path: polygon(3% 8%, 97% 0, 100% 30%, 98% 62%, 100% 100%, 2% 94%, 0 60%, 2% 30%);
+  }
+
+  .card:nth-child(3n + 2)::before {
+    left: 30%;
+    transform: translateX(-50%) rotate(2.5deg);
+  }
+
+  .card:nth-child(3n)::before {
+    left: 68%;
+    transform: translateX(-50%) rotate(-1.5deg);
   }
 
   .badge {
-    @apply inline-block rounded-full border border-foreground bg-background px-3 py-1 text-sm;
+    @apply inline-flex items-center gap-1.5 self-start rounded-full border-[1.5px] px-2.5 py-1 font-mono text-xs font-semibold tracking-wider uppercase;
+    color: var(--cat, var(--foreground));
+    border-color: currentColor;
+    background: rgb(250 245 236 / 0.55);
+  }
+
+  .meta {
+    @apply flex flex-wrap gap-x-4 gap-y-1 text-sm;
+    color: var(--muted);
+  }
+
+  .meta > span {
+    @apply inline-flex items-center gap-1.5;
+  }
+
+  .meta .icon {
+    color: var(--cat, var(--stencil));
+  }
+
+  /* Kasten mit den Eckdaten einer Aktion oder eines Profils */
+  .facts {
+    @apply relative flex flex-col gap-4 self-start rounded-sm border-2 border-foreground p-5 pt-6;
+    background: rgb(255 253 248 / 0.85);
+  }
+
+  .fact {
+    @apply grid grid-cols-[1.25rem_1fr] items-start gap-3;
+  }
+
+  .fact > .icon {
+    @apply mt-0.5 h-5 w-5;
+    color: var(--stencil);
+  }
+
+  .fact small {
+    @apply block text-sm;
+    color: var(--muted);
+  }
+
+  .maps {
+    @apply mt-1 inline-flex items-center gap-1 text-sm font-semibold underline underline-offset-2;
+    color: var(--stencil);
+  }
+
+  .stencil-rule {
+    border: 0;
+    border-top: 2px dashed var(--stencil);
+    opacity: 0.75;
   }
 
   .input {
-    @apply w-full rounded-lg border-2 border-foreground bg-white px-3 py-2;
+    @apply w-full rounded-md border-2 border-foreground px-3 py-2;
+    background: rgb(255 253 248 / 0.8);
+  }
+
+  .input:focus {
+    outline: 2px solid var(--stencil);
+    outline-offset: 2px;
   }
 
   .error {
-    @apply rounded-lg border-2 border-stamp bg-white px-3 py-2 font-semibold text-stamp;
+    @apply rounded-md border-2 border-stamp bg-white px-3 py-2 font-semibold text-stamp;
+  }
+
+  /* Icons: Die SVG-Datei ist nur die Form, die Farbe kommt aus currentColor */
+  .icon,
+  .type-icon {
+    display: inline-block;
+    flex: none;
+    width: 1.1em;
+    height: 1.1em;
+    background-color: currentColor;
+    -webkit-mask: var(--icon) center / contain no-repeat;
+    mask: var(--icon) center / contain no-repeat;
+  }
+
+  .icon-machine { --icon: url("/icons/machine.svg"); }
+  .icon-cartridge { --icon: url("/icons/cartridge.svg"); }
+  .icon-bottle { --icon: url("/icons/bottle.svg"); }
+  .icon-suitcase { --icon: url("/icons/suitcase.svg"); }
+  .icon-ticket { --icon: url("/icons/ticket.svg"); }
+  .icon-pin { --icon: url("/icons/pin.svg"); }
+  .icon-calendar { --icon: url("/icons/calendar.svg"); }
+  .icon-mail { --icon: url("/icons/mail.svg"); }
+  .icon-user { --icon: url("/icons/user.svg"); }
+  .icon-external { --icon: url("/icons/external.svg"); }
+  .icon-instagram { --icon: url("/icons/instagram.svg"); }
+
+  /* Eine Farbe und ein Icon pro Art */
+  .type-FLASH_DAY {
+    --cat: #a33424;
+    --tint: rgb(181 58 38 / 0.13);
+    --icon: url("/icons/machine.svg");
+  }
+
+  .type-GUEST_SPOT {
+    --cat: #2f6635;
+    --tint: rgb(52 110 62 / 0.14);
+    --icon: url("/icons/suitcase.svg");
+  }
+
+  .type-CONVENTION {
+    --cat: #7c5a12;
+    --tint: rgb(186 136 32 / 0.17);
+    --icon: url("/icons/ticket.svg");
+  }
+
+  .type-PROJECT {
+    --cat: #3f3aa6;
+    --tint: rgb(63 58 166 / 0.12);
+    --icon: url("/icons/bottle.svg");
+  }
+
+  .type-OTHER {
+    --cat: #4f4842;
+    --tint: rgb(95 84 72 / 0.11);
+    --icon: url("/icons/cartridge.svg");
+  }
+
+  /* Deine Zeichnung auf der Startseite: Schwarz wird Stencil-Violett, Weiß verschwindet */
+  .stencil-art {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      url("/images/stencil.jpg") center / contain no-repeat,
+      #fff;
+    mix-blend-mode: multiply;
+    opacity: 0.35;
+  }
+
+  .stencil-art::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    background: var(--stencil);
+    mix-blend-mode: screen;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card:hover {
+    transition: none;
+    transform: none;
   }
 }

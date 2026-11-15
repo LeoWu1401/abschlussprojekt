@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Alfa_Slab_One, Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Rye } from "next/font/google";
 import "./globals.css";
 import Nav from "./components/Nav";
 import { getCurrentUser } from "@/lib/session";
@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const alfaSlab = Alfa_Slab_One({
+const rye = Rye({
   weight: "400",
-  variable: "--font-slab",
+  variable: "--font-rye",
   subsets: ["latin"],
 });
 
@@ -31,7 +31,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="de"
-      className={`${geistSans.variable} ${geistMono.variable} ${alfaSlab.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${rye.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Nav user={user} />
