@@ -30,61 +30,85 @@ export default async function PostPage({
   if (!post) {
     notFound();
   }
-  
+
   const contactHref = getContactHref(post.contact, post.title);
-;
+  const mapsHref = post.address
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        `${post.address}, ${post.city}`,
+      )}`
+    : null;
 
   return (
-    <div>
+    <div className={`type-${post.type}`}>
       <Link href="/board" className="text-sm opacity-70">
         « Zurück zur Pinnwand
       </Link>
-      <h1 className="mt-4">{post.title}</h1>
-      <p>
-        <strong>Art:</strong> {postTypes[post.type]}
-      </p>
-      <p>
-        <strong>Datum:</strong> {formatDate(post.date)}
-      </p>
-      <p>
-        <strong>Bundesland:</strong> {federalStates[post.federalState]}
-      </p>
-      <p>
-        <strong>Stadt:</strong> {post.city}
-      </p>
-      {post.address && (
-        <p>
-          <strong>Adresse:</strong> {post.address}
-        </p>
-      )}
-      <p className="mt-4 max-w-xl">{post.description}</p>
-      <p className="mt-4">
-        <strong>Kontakt:</strong>{" "}
-        {contactHref ? (
-          <a href={contactHref} className="font-semibold underline">
-            {post.contact}
-          </a>
-        ) : (
-          post.contact
-        )}
-      </p>
-      <p className="mt-4">
-        von{" "}
-        <Link
-          href={`/profile/${post.userId}`}
-          className="font-semibold underline"
-        >
-          {post.user.name}
-        </Link>
-      </p>
-      {post.userId === user.id && (
-        <div className="mt-6 flex gap-3">
-          <Link href={`/posts/${post.id}/edit`} className="btn-secondary">
-            Bearbeiten
-          </Link>
-          <DeleteButton postId={post.id} />
+      <div className="mt-6 grid gap-8 md:grid-cols-[3fr_2fr]">
+        <div>
+          <span className="badge">
+            <span className="type-icon" aria-hidden="true" />
+            {postTypes[post.type]}
+          </span>
+          <h1 className="mt-4">{post.title}</h1>
+          <p className="mt-4 max-w-xl text-lg">{post.description}</p>
+          {post.userId === user.id && (
+            <div className="mt-8 flex gap-3">
+              <Link href={`/posts/${post.id}/edit`} className="btn-secondary">
+                Bearbeiten
+              </Link>
+              <DeleteButton postId={post.id} />
+            </div>
+          )}
         </div>
-      )}
+
+        <aside className="facts">
+          <p className="fact">
+            <span className="icon icon-calendar" aria-hidden="true" />
+            <strong>{formatDate(post.date)}</strong>
+          </p>
+          <p className="fact">
+            <span className="icon icon-pin" aria-hidden="true" />
+            <span>
+              <strong>{post.city}</strong>
+              <small>{federalStates[post.federalState]}</small>
+              {post.address && <small>{post.address}</small>}
+              {mapsHref && (
+                <a
+                  href={mapsHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="maps"
+                >
+                  Auf Google Maps anzeigen
+                  <span className="icon icon-external" aria-hidden="true" />
+                </a>
+              )}
+            </span>
+          </p>
+          <p className="fact">
+            <span className="icon icon-user" aria-hidden="true" />
+            <Link
+              href={`/profile/${post.userId}`}
+              className="font-semibold underline"
+            >
+              {post.user.name}
+            </Link>
+          </p>
+          <p className="fact">
+            <span className="icon icon-mail" aria-hidden="true" />
+            {contactHref ? (
+              <a
+                href={contactHref}
+                className="font-semibold break-all underline"
+              >
+                {post.contact}
+              </a>
+            ) : (
+              <span>{post.contact}</span>
+            )}
+          </p>
+        </aside>
+      </div>
     </div>
   );
 }
